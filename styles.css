@@ -1,0 +1,175 @@
+html, body {
+    overflow-y: hidden;
+    height: 100%;
+}
+/* --- GENERAL --- */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;            /* Sidebar a la izquierda y contenido a la derecha */
+    height: 100vh;            /* Ocupa toda la pantalla */
+    font-family: sans-serif;
+}
+
+/* --- SIDEBAR --- */
+#sidebar {
+    width: 250px;             /* Ancho del lateral */
+    background: #1f1f1f;      /* Color estilo sidebar */
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-right: 1px solid #333;
+    flex-shrink: 0;
+}
+
+/* botones dentro del sidebar */
+#botones-proyectos button,
+#nuevo-proyecto {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #333;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    word-wrap: break-word;      /* Rompe palabras largas */
+    overflow-wrap: break-word;  /* Rompe texto cuando excede el ancho */
+    white-space: normal; 
+}
+
+#botones-proyectos {
+    overflow-y: auto;
+}
+
+#botones-proyectos button {
+    margin-bottom: 5px;
+}
+
+#botones-proyectos button:hover,
+#nuevo-proyecto:hover {
+    background: #444;
+}
+
+/* --- CONTENIDO PRINCIPAL A LA DERECHA --- */
+#contenido {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#aviso {
+    margin: 20px;
+}
+
+/* --- TITULO DEL PROYECTO --- */
+#titulo-proyecto {
+    padding: 20px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+
+#secciones-proyectos {
+    display: flex;
+    flex-direction: row; /* Secciones una al lado de la otra */
+    gap: 20px;
+    overflow-x: auto;   /* Scroll horizontal si hay muchas */
+    padding: 20px;
+}
+
+.secciones {
+    flex-shrink: 0;     /* Evita que se encojan */
+    flex-direction: row;
+    margin-right: 10px;
+    width: 230px;
+    border-radius: 10px;
+}
+
+/* --- CADA SECCIÓN --- */
+.contenedor-secciones {
+    display: flex;
+    width: 280px;
+    background: #e4e6eb;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;  /* Tarjetas en vertical */
+    gap: 15px;
+    position: relative;
+    box-shadow: 0 2px 4px #0002;
+    flex-shrink: 0;          /* ⬅ MUY IMPORTANTE para que no colapsen */
+}
+
+/* Título de cada sección */
+.nombre-seccion h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 15px;
+}
+
+.nombre-seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.AggTarj {
+    margin-right: 15px;
+}
+
+/* Contenedor de tarjetas */
+.contenedor-tarjetas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 560px;   /* 👈 Ajusta la altura que quieras */
+    overflow-y: auto;    /* 👈 Activa scroll vertical */
+    width: 100%;         /* Para que el scroll quede alineado */
+    padding-right: 5px;  /* Evita que el scroll tape tarjetas */
+}
+
+/* --- TARJETA --- */
+.tarjetas {
+    background: white;
+    padding: 12px 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px #0001;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    width: 200px;
+
+}
+
+.Planning {
+    background-color: antiquewhite;
+}
+
+.InProgress {
+    background-color: lightpink;
+}
+
+.Done {
+    background-color: lightgray;
+}
+
+/* Texto de la tarjeta */
+.tarjetas p {
+    margin: 0;
+    width: 100%;
+    font-size: 15px;
+    word-wrap: break-word;      /* Rompe palabras largas */
+    overflow-wrap: break-word;  /* Rompe texto cuando excede el ancho */
+    white-space: normal; 
+}
+
+.BAccion {
+    margin: 1px;
+}
