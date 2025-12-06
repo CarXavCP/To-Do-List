@@ -1,6 +1,8 @@
 const seccionSidebar = document.getElementById('botones-proyectos')
+const botonAgregarProyecto = document.getElementById('nuevo-proyecto')
 const seccionTitulo = document.getElementById('titulo-proyecto')
 const pantallaSeccionesProyectos = document.getElementById('secciones-proyectos')
+const seccionBotonesAD = document.getElementById('seccionBtnA-D')
 const mensajeVacio = document.getElementById('aviso')
 //PARA GUARDAR TODO LO RELATIVO A LAS SECCIONES
 let seccionesPredeterminadas = []
@@ -75,10 +77,8 @@ class BProyectos {
 
 function iniciarPagina() {
 
-    let seccionTitulo = document.getElementById('titulo-proyecto')
     seccionTitulo.style.display = 'none'
     
-    let botonAgregarProyecto = document.getElementById('nuevo-proyecto')
     botonAgregarProyecto.addEventListener('click', agregarProyecto)
 
 }
