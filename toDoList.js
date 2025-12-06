@@ -79,6 +79,8 @@ function iniciarPagina() {
 
     seccionTitulo.style.display = 'none'
     
+    seccionBotonesAD.style.display = 'none'    
+
     botonAgregarProyecto.addEventListener('click', agregarProyecto)
 
 }
@@ -96,7 +98,9 @@ function agregarProyecto() {
         console.log(nombreProyecto)
         mensajeVacio.style.display = 'none'
         seccionTitulo.style.display = 'flex'
-        
+        seccionBotonesAD.style.display = 'flex'    
+
+
         botonProyectoNuevo = document.createElement('button')
 
         botonProyectoNuevo.textContent = nombreProyecto
