@@ -192,29 +192,7 @@ function mostrarProyecto(botonAccionado) {
     
         }
     }
-    //console.log(seccionesActuales)
 }
-
-// function accionarBotones() {
-//     botones = document.querySelectorAll('.BAccion')
-//     console.log(botones)
-//     botones.forEach((boton) => {
-//         boton.addEventListener('click', (e) => {
-//             if (e.target.textContent === '+') {
-//                 identificadorBoton = e.target.id
-//                 agregarTarjeta(identificadorBoton)
-//             //} else if (e.target.textContent === 'mover') {
-
-//            // } else if (e.target.textContent === 'editar') {
-
-//             } else if (e.target.textContent === 'eliminar') {
-//                 eliminarTarjeta(boton)
-//             } else if (e.target.className === 'BProyectos') {
-
-//             }
-//         }) 
-//     });
-// }
 
 function agregarTarjeta(identificadorBoton) {
 
@@ -237,15 +215,7 @@ function agregarTarjeta(identificadorBoton) {
     if (mensajeAgregarTarjeta !== '' && mensajeAgregarTarjeta !== null) {
         contenedorBotones = document.createElement('div')
         contenedorBotones.className = 'botones'
-        // let menu = document.createElement("div")
-        // menu.className = "menu-opciones"
 
-        // let menuBtn = document.createElement("button")
-        // menuBtn.className = "menu-btn"
-        // menuBtn.textContent = "⋮"
-
-        // let menuDesplegable = document.createElement("div")
-        // menuDesplegable.className = "menu-desplegable oculto"
         
         botonEditar = document.createElement('button')
         botonEditar.textContent = 'Editar'
@@ -259,13 +229,10 @@ function agregarTarjeta(identificadorBoton) {
         botonEliminar.textContent = 'Eliminar'
         botonEliminar.className = 'BAccion'
 
-        // menuDesplegable.append(botonMover, botonEditar, botonEliminar)
-        // menu.append(menuBtn, menuDesplegable)
 
         contenedorTarjetas.appendChild(nuevaTarjeta)
         contenedorBotones.append(botonMover, botonEditar, botonEliminar)
         nuevaTarjeta.append(textoTarjeta, contenedorBotones)
-        //botonMover, ' ', botonEditar, ' ', botonEliminarmenu
         textoTarjeta.innerHTML = mensajeAgregarTarjeta
 
     }else if (mensajeAgregarTarjeta === null) {
@@ -289,16 +256,7 @@ function editarTarjeta(boton) {
     if (nuevoTexto !== null && nuevoTexto.trim() !== '') {
         textoTarjeta.textContent = nuevoTexto;
     }
-    // textoTarjeta.contentEditable = true
-    // textoTarjeta.focus()
-    // textoTarjeta.addEventListener('blur', () => textoTarjeta.contentEditable = false, { once: true })
 
-    // textoTarjeta.addEventListener('keydown', (e) => {
-    //   if (e.key === 'Enter') {
-    //     e.preventDefault()
-    //     textoTarjeta.contentEditable = false
-    //     }
-    // })
 }
 
 function moverTarjeta(boton) {
@@ -351,8 +309,6 @@ function moverTarjeta(boton) {
 }
 
 
-
-
 window.addEventListener('load',iniciarPagina)
 
 document.body.addEventListener("click", (e) => {
@@ -396,18 +352,3 @@ document.body.addEventListener("click", (e) => {
     }
 
 });
-
-// document.addEventListener("click", (e) => {
-//     const botonMenu = e.target.closest(".boton-menu");
-
-//     // 🔥 Si clickeas un botón de menú:
-//     if (botonMenu) {
-//         const menu = botonMenu.nextElementSibling;
-//         menu.classList.toggle("activo");
-//         return;
-//     }
-
-//     // 🔥 Si clickeas afuera, cerrar todos los menús
-//     document.querySelectorAll(".menu-desplegable.activo")
-//             .forEach(menu => menu.classList.remove("activo"));
-// });
