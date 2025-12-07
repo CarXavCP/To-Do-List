@@ -4,9 +4,20 @@ const seccionTitulo = document.getElementById('titulo-proyecto')
 const pantallaSeccionesProyectos = document.getElementById('secciones-proyectos')
 const seccionBotonesAD = document.getElementById('seccionBtnA-D')
 const mensajeVacio = document.getElementById('aviso')
+
+
+const modal = document.getElementById("modal");
+const picker = document.getElementById("colorPicker");
+const confirmar = document.getElementById("confirmar");
+const omitir = document.getElementById('omitir')
+
 //PARA GUARDAR TODO LO RELATIVO A LAS SECCIONES
 let seccionesPredeterminadas = []
 let seccion
+let contenedorReal 
+let contenedorTarjetasReal
+let color
+let nombreSeccion
 
 //RELATIVAS A RELACIONAR PROYECTOS CON SUS RESPECTIVAS SECCIONES
 let seccionesProyectos = []
@@ -31,12 +42,14 @@ let contadorTarjetas = 0
 //FUNCION AGREGAR PROYECTO
 let proyectoNuevo
 let botonProyectoNuevo
-let nombreProyecto
+let nombreProyecto //con esta tambien se accede al proyecto en mostrar proyecto
 let identificadorProyecto
 let contadorProyectos = 0
 
-//FUNCION MOSTRAR PROYECTO
-let titulo
+//FUNCION AGREGAR SECCION
+let nuevaSeccion
+let identificadorSeccion
+
 //let mostrarSeccion
 let seccionesActuales
 //FUNCION EDITAR Y MOVER
@@ -134,8 +147,8 @@ function agregarProyecto() {
             `
             proyectoNuevo.innerHTML += contenedorSeccion
 
-            let contenedorReal = document.getElementById(`${seccion.id}-${contadorProyectos}`)
-            let contenedorTarjetasReal = document.getElementById(`tarjetas-${seccion.id}-${contadorProyectos}`)
+            contenedorReal = document.getElementById(`${seccion.id}-${contadorProyectos}`)
+            contenedorTarjetasReal = document.getElementById(`tarjetas-${seccion.id}-${contadorProyectos}`)
             
             seccionesIndependientes.push({
                 id: seccion.id,
@@ -180,7 +193,7 @@ function mostrarProyecto(botonAccionado) {
         
         if (botonesProyectos[i].id === botonAccionado) {
             seccionesActuales = seccionesProyectos[i]
-            titulo = proyectos[i].nombre
+            nombreProyecto = proyectos[i].nombre
             contenedorProyecto = document.getElementById(proyectos[i].id)
                 
             document.querySelectorAll('.proyectos').forEach(div => {
@@ -188,7 +201,7 @@ function mostrarProyecto(botonAccionado) {
             })
             
             contenedorProyecto.style.display = 'flex'
-            seccionTitulo.innerHTML = titulo
+            seccionTitulo.innerHTML = nombreProyecto
     
         }
     }
@@ -215,19 +228,22 @@ function agregarTarjeta(identificadorBoton) {
     if (mensajeAgregarTarjeta !== '' && mensajeAgregarTarjeta !== null) {
         contenedorBotones = document.createElement('div')
         contenedorBotones.className = 'botones'
-
+        
         
         botonEditar = document.createElement('button')
-        botonEditar.textContent = 'Editar'
+        botonEditar.textContent = '✏️'
         botonEditar.className = 'BAccion'
+        botonEditar.dataset.tooltip = "Editar"
 
         botonMover = document.createElement('button')
-        botonMover.textContent = 'Mover'
+        botonMover.textContent = '🔄️'
         botonMover.className = 'BAccion'
+        botonMover.dataset.tooltip = "Mover"
 
         botonEliminar = document.createElement('button')
-        botonEliminar.textContent = 'Eliminar'
+        botonEliminar.textContent = '🗑️'
         botonEliminar.className = 'BAccion'
+        botonEliminar.dataset.tooltip = "Eliminar"
 
 
         contenedorTarjetas.appendChild(nuevaTarjeta)
@@ -304,10 +320,80 @@ function moverTarjeta(boton) {
 
     })
 
-
-    
 }
 
+async function agregarSecciones() {
+    const { value: form } = await Swal.fire({
+        title: "Nueva sección",
+        html: `
+            <input id="nombreSeccion" class="swal2-input" placeholder="Nombre">
+            <br>
+            <label>Color:</label>
+            <input id="colorSeccion" type="color" style="width: 120px; height: 40px;">
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        preConfirm: () => {
+            const nombre = document.getElementById("nombreSeccion").value.trim();
+            const color = document.getElementById("colorSeccion").value;
+
+            if (!nombre) {
+            Swal.showValidationMessage("Debes escribir un nombre");
+            return false;
+            }
+
+            return { nombre, color };
+        }
+        });
+
+        if (form) {
+            nombreSeccion = form.nombre;
+            color = form.color;
+        } else {
+            return
+        }
+    
+    nuevaSeccion = nombreSeccion.replace(/ /g, "");  
+    console.log("El usuario escribió:", nuevaSeccion);
+
+    for (let i = 0; i < proyectos.length; i++) {
+        if (proyectos[i].nombre === nombreProyecto) {
+            console.log(proyectos[i].nombre, nombreProyecto)
+            identificadorSeccion = nuevaSeccion + '-' + i
+            console.log(identificadorSeccion)
+
+            contenedorSeccion = 
+                `
+                <div class = 'secciones ${nuevaSeccion}' id = '${identificadorSeccion}'>
+                    <div class = 'nombre-seccion'>
+                        <h3 class = 'encabezado'>${nombreSeccion}</h3>
+                        <button class = 'AggTarj' id = 'agregar${identificadorSeccion}' >+</button>
+                    </div>
+
+                    <div class = 'contenedor-tarjetas' id = 'tarjetas-${identificadorSeccion}'> 
+                        
+                    </div>
+                </div>
+                `
+
+            document.getElementById(proyectos[i].id).innerHTML += contenedorSeccion
+            
+            contenedorReal = document.getElementById(identificadorSeccion)
+            contenedorTarjetasReal = document.getElementById(`tarjetas-${identificadorSeccion}`)
+    
+            seccionesProyectos[i].push({
+                id: identificadorSeccion,
+                contenedor: contenedorReal,
+                tarjetas: contenedorTarjetasReal
+            })
+
+            contenedorReal.style.background = color;
+            
+            console.log(seccionesProyectos)
+        }
+    }
+        
+}
 
 window.addEventListener('load',iniciarPagina)
 
@@ -317,19 +403,19 @@ document.body.addEventListener("click", (e) => {
     if (e.target.classList.contains("BAccion")) {
 
         // 2. BOTÓN ELIMINAR
-        if (e.target.textContent === "Eliminar") {
+        if (e.target.textContent === "🗑️") {
             eliminarTarjeta(e.target);
             return;
         }
 
         // 3. BOTÓN EDITAR
-        if (e.target.textContent === "Editar") {
+        if (e.target.textContent === "✏️") {
             editarTarjeta(e.target);
             return;
         }
 
         // 4. BOTÓN MOVER
-        if (e.target.textContent === "Mover") {
+        if (e.target.textContent === "🔄️") {
             moverTarjeta(e.target);
             return;
         }
@@ -351,4 +437,12 @@ document.body.addEventListener("click", (e) => {
         return;
     }
 
+    if (e.target.textContent === 'Agregar Seccion') {
+        agregarSecciones()
+    }
+
+    
+    if (e.target.textContent === 'Eliminar Seccion') {
+        alert('presionaste boton B')
+    }
 });

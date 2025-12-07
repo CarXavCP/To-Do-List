@@ -88,21 +88,6 @@ body {
     border-radius: 10px;
 }
 
-/* --- CADA SECCIÓN --- */
-.contenedor-secciones {
-    display: flex;
-    width: 280px;
-    background: #e4e6eb;
-    padding: 15px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;  /* Tarjetas en vertical */
-    gap: 15px;
-    position: relative;
-    box-shadow: 0 2px 4px #0002;
-    flex-shrink: 0;          /* ⬅ MUY IMPORTANTE para que no colapsen */
-}
 
 /* Título de cada sección */
 .nombre-seccion h3 {
@@ -170,6 +155,104 @@ body {
     white-space: normal; 
 }
 
+.AggTarj {
+    height: 25px;
+    width: 25px;
+    font-size: 20px;
+    background: transparent;   
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.AggTarj:hover {
+    background: #d3d3d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+}
+
 .BAccion {
-    margin: 1px;
+    height: 25px;
+    width: 25px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    margin: 5px;
+    justify-content: left;
+    align-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: #444;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+   
+}
+
+.BAccion:hover {
+   
+    transform: translateY(-2px);
+   
+}
+
+.BAccion:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.BAccion {
+    position: relative;
+    cursor: pointer;
+}
+
+/* El tooltip */
+.BAccion::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Flechita */
+.BAccion::before {
+    content: "";
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Mostrar tooltip */
+.BAccion:hover::after,
+.BAccion:hover::before {
+    opacity: 1;
+}
+
+
+
+
+#modal {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  width: 300px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: pop .25s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.7) translateX(-50%); }
+  100% { transform: scale(1) translateX(-50%); }
 }
