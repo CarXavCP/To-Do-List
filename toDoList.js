@@ -98,93 +98,94 @@ function iniciarPagina() {
 
 }
 
-function agregarProyecto() {
-    
-    nombreProyecto = prompt('Agrega el nombre de tu proyecto: ')
-    
+async function agregarProyecto() {
 
-    if (nombreProyecto !== null) {
-        nombreProyecto = nombreProyecto.trim()
-    }
+    const {value: nombre} = await Swal.fire({
+        title: "Ingrese el nombre del proyecto: ",
+        input: "text",
+        inputPlaceholder: "Ej: Planning",
+        inputValidator: (value) => {
+            if (!value.trim()) {
+                return "Debes escribir un nombre";
+            }
+        },
+        showCancelButton: true
+    });
 
-    if (nombreProyecto !== '' && nombreProyecto !== null) {
-        console.log(nombreProyecto)
-        mensajeVacio.style.display = 'none'
-        seccionTitulo.style.display = 'flex'
-        seccionBotonesAD.style.display = 'flex'    
+    if (!nombre) return;
+
+    nombreProyecto = nombre    
 
 
-        botonProyectoNuevo = document.createElement('button')
+    console.log(nombreProyecto)
+    mensajeVacio.style.display = 'none'
+    seccionTitulo.style.display = 'flex'
+    seccionBotonesAD.style.display = 'flex'    
 
-        botonProyectoNuevo.textContent = nombreProyecto
-        seccionTitulo.innerHTML = nombreProyecto
-        botonProyectoNuevo.className = 'BProyectos'
-        botonProyectoNuevo.id = 'btn-proyecto-' + contadorProyectos
-        seccionSidebar.appendChild(botonProyectoNuevo)
 
-        proyectoNuevo = document.createElement('div')
-        proyectoNuevo.className = 'proyectos'
+    botonProyectoNuevo = document.createElement('button')
 
-        identificadorProyecto = nombreProyecto.replace(/\s+/g, '-') + contadorProyectos
-        proyectoNuevo.id = identificadorProyecto
-        pantallaSeccionesProyectos.appendChild(proyectoNuevo)
+    botonProyectoNuevo.textContent = nombreProyecto
+    seccionTitulo.innerHTML = nombreProyecto
+    botonProyectoNuevo.className = 'BProyectos'
+    botonProyectoNuevo.id = 'btn-proyecto-' + contadorProyectos
+    seccionSidebar.appendChild(botonProyectoNuevo)
 
-        let seccionesIndependientes = []
+    proyectoNuevo = document.createElement('div')
+    proyectoNuevo.className = 'proyectos'
 
-        seccionesPredeterminadas.forEach((seccion) => {
-            contenedorSeccion = 
-            `
-            <div class = 'secciones ${seccion.id}' id = '${seccion.id}-${contadorProyectos}'>
-                <div class = 'nombre-seccion'>
-                    <h3 class = 'encabezado'>${seccion.nombre}</h3>
-                    <button class = 'AggTarj' id = 'agregar${seccion.id}-${contadorProyectos}' >+</button>
-                </div>
+    identificadorProyecto = nombreProyecto.replace(/\s+/g, '-') + contadorProyectos
+    proyectoNuevo.id = identificadorProyecto
+    pantallaSeccionesProyectos.appendChild(proyectoNuevo)
 
-                <div class = 'contenedor-tarjetas' id = 'tarjetas-${seccion.id}-${contadorProyectos}'> 
-                    
-                </div>
+    let seccionesIndependientes = []
+
+    seccionesPredeterminadas.forEach((seccion) => {
+        contenedorSeccion = 
+        `
+        <div class = 'secciones ${seccion.id}' id = '${seccion.id}-${contadorProyectos}'>
+            <div class = 'nombre-seccion'>
+                <h3 class = 'encabezado'>${seccion.nombre}</h3>
+                <button class = 'AggTarj' id = 'agregar${seccion.id}-${contadorProyectos}' >+</button>
             </div>
-            `
-            proyectoNuevo.innerHTML += contenedorSeccion
 
-            contenedorReal = document.getElementById(`${seccion.id}-${contadorProyectos}`)
-            contenedorTarjetasReal = document.getElementById(`tarjetas-${seccion.id}-${contadorProyectos}`)
-            
-            seccionesIndependientes.push({
-                id: seccion.id,
-                contenedor: contenedorReal,
-                tarjetas: contenedorTarjetasReal
-            })
+            <div class = 'contenedor-tarjetas' id = 'tarjetas-${seccion.id}-${contadorProyectos}'> 
+                
+            </div>
+        </div>
+        `
+        proyectoNuevo.innerHTML += contenedorSeccion
 
-            
-        });
-
-        seccionesProyectos.push(seccionesIndependientes)
-
-        let proyecto = new Proyecto (nombreProyecto, identificadorProyecto)
-        proyectos.push(proyecto)
-
-        let boton = new BProyectos (nombreProyecto, 'BProyectos', 'btn-proyecto-'+contadorProyectos)
-        botonesProyectos.push(boton)
-
-        console.log(proyectos, seccionesProyectos, botonesProyectos)
-        contadorProyectos ++ 
-
-        document.querySelectorAll('.proyectos').forEach(div => {
-            div.style.display = 'none'
+        contenedorReal = document.getElementById(`${seccion.id}-${contadorProyectos}`)
+        contenedorTarjetasReal = document.getElementById(`tarjetas-${seccion.id}-${contadorProyectos}`)
+        
+        seccionesIndependientes.push({
+            id: seccion.id,
+            contenedor: contenedorReal,
+            tarjetas: contenedorTarjetasReal
         })
-        
-        seccionesActuales = seccionesIndependientes
-        proyectoNuevo.style.display = 'flex'
-        
 
-    }else if (nombreProyecto === null) {
-        return
-    
-    } else {
-        alert('No has agregado un nombre, no se pudo crear el proyecto')
-    }
+        
+    });
 
+    seccionesProyectos.push(seccionesIndependientes)
+
+    let proyecto = new Proyecto (nombreProyecto, identificadorProyecto)
+    proyectos.push(proyecto)
+
+    let boton = new BProyectos (nombreProyecto, 'BProyectos', 'btn-proyecto-'+contadorProyectos)
+    botonesProyectos.push(boton)
+
+    console.log(proyectos, seccionesProyectos, botonesProyectos)
+    contadorProyectos ++ 
+
+    document.querySelectorAll('.proyectos').forEach(div => {
+        div.style.display = 'none'
+    })
+        
+    seccionesActuales = seccionesIndependientes
+    proyectoNuevo.style.display = 'flex'
+        
 }
 
 function mostrarProyecto(botonAccionado) {
@@ -207,7 +208,21 @@ function mostrarProyecto(botonAccionado) {
     }
 }
 
-function agregarTarjeta(identificadorBoton) {
+async function agregarTarjeta(identificadorBoton) {
+
+    const {value: nombre} = await Swal.fire({
+        title: "Ingrese la tarea: ",
+        input: "text",
+        inputPlaceholder: "Ej: Planning",
+        inputValidator: (value) => {
+            if (!value.trim()) {
+                return "No puedes agregar tareas vacías";
+            }
+        },
+        showCancelButton: true
+    });
+
+    if (!nombre) return;
 
     botonAccionado = document.getElementById(identificadorBoton)
     seccion = botonAccionado.closest('div[id]')
@@ -219,44 +234,34 @@ function agregarTarjeta(identificadorBoton) {
     
     textoTarjeta = document.createElement('p')
     textoTarjeta.contentEditable = false
-    mensajeAgregarTarjeta = prompt('Agregue Tarea')
+    mensajeAgregarTarjeta = nombre
     
-    if (mensajeAgregarTarjeta !== null) {
-        mensajeAgregarTarjeta = mensajeAgregarTarjeta.trim()
-    }
+
+    contenedorBotones = document.createElement('div')
+    contenedorBotones.className = 'botones'
     
-    if (mensajeAgregarTarjeta !== '' && mensajeAgregarTarjeta !== null) {
-        contenedorBotones = document.createElement('div')
-        contenedorBotones.className = 'botones'
-        
-        
-        botonEditar = document.createElement('button')
-        botonEditar.textContent = '✏️'
-        botonEditar.className = 'BAccion'
-        botonEditar.dataset.tooltip = "Editar"
 
-        botonMover = document.createElement('button')
-        botonMover.textContent = '🔄️'
-        botonMover.className = 'BAccion'
-        botonMover.dataset.tooltip = "Mover"
+    botonEditar = document.createElement('button')
+    botonEditar.textContent = '✏️'
+    botonEditar.className = 'BAccion'
+    botonEditar.dataset.tooltip = "Editar"
 
-        botonEliminar = document.createElement('button')
-        botonEliminar.textContent = '🗑️'
-        botonEliminar.className = 'BAccion'
-        botonEliminar.dataset.tooltip = "Eliminar"
+    botonMover = document.createElement('button')
+    botonMover.textContent = '🔄️'
+    botonMover.className = 'BAccion'
+    botonMover.dataset.tooltip = "Mover"
+
+    botonEliminar = document.createElement('button')
+    botonEliminar.textContent = '🗑️'
+    botonEliminar.className = 'BAccion'
+    botonEliminar.dataset.tooltip = "Eliminar"
 
 
-        contenedorTarjetas.appendChild(nuevaTarjeta)
-        contenedorBotones.append(botonMover, botonEditar, botonEliminar)
-        nuevaTarjeta.append(textoTarjeta, contenedorBotones)
-        textoTarjeta.innerHTML = mensajeAgregarTarjeta
+    contenedorTarjetas.appendChild(nuevaTarjeta)
+    contenedorBotones.append(botonMover, botonEditar, botonEliminar)
+    nuevaTarjeta.append(textoTarjeta, contenedorBotones)
+    textoTarjeta.innerHTML = mensajeAgregarTarjeta
 
-    }else if (mensajeAgregarTarjeta === null) {
-        return
-    
-    } else {
-        alert('No has agregado contenido, no se pudo agregar la tarea')
-    }
 }
 
 function eliminarTarjeta(boton) {
@@ -324,11 +329,11 @@ function moverTarjeta(boton) {
 
 async function agregarSecciones() {
     const { value: form } = await Swal.fire({
-        title: "Nueva sección",
+        title: "Agrega un nombre a tu sección",
         html: `
-            <input id="nombreSeccion" class="swal2-input" placeholder="Nombre">
-            <br>
-            <label>Color:</label>
+            <input id="nombreSeccion" class="swal2-input" placeholder="Ej.: Pendiente">
+            <br><br>
+            <label>Elige un color para tu sección:</label>
             <input id="colorSeccion" type="color" style="width: 120px; height: 40px;">
         `,
         focusConfirm: false,
@@ -389,11 +394,73 @@ async function agregarSecciones() {
 
             contenedorReal.style.background = color;
             
-            console.log(seccionesProyectos)
+            console.log(seccionesActuales, seccionesProyectos)
         }
     }
         
 }
+
+async function eliminarSecciones() {
+
+    let listaSecciones = seccionesActuales.map(sec => ({
+        id: sec.contenedor.id,
+        nombre: sec.contenedor.querySelector('.encabezado').textContent
+    }));
+
+    let opciones = {};
+    listaSecciones.forEach(sec => {
+        opciones[sec.id] = sec.nombre;
+    });
+
+    // Primer swal — elegir sección
+    const seleccion = await Swal.fire({
+        title: "Selecciona una sección",
+        input: "select",
+        inputOptions: opciones,
+        inputPlaceholder: "Elige una sección",
+        showCancelButton: true,
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar"
+    });
+
+    if (!seleccion.isConfirmed) return;
+
+    const idSeleccionada = seleccion.value;
+    const nombreSeleccionado = opciones[idSeleccionada];
+
+    console.log("Sección seleccionada:", idSeleccionada);
+
+    const confirmacion = await Swal.fire({
+        title: "¿Eliminar sección?",
+        html: `
+            <b>${nombreSeleccionado}</b><br>
+            Esta acción eliminará la sección y todas sus tarjetas.
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    // Eliminar del DOM
+    const seccionDOM = document.getElementById(idSeleccionada);
+    console.log("Elemento a eliminar:", seccionDOM);
+
+    console.log(idSeleccionada);
+
+    for (let i = 0; i < seccionesActuales.length; i++) {
+        if (seccionesActuales[i].contenedor.id === idSeleccionada) {
+            seccionesActuales.splice(i, 1)
+            if (seccionDOM) seccionDOM.remove();
+            console.log(seccionesActuales, seccionesProyectos)
+        }
+    }
+}
+
+
 
 window.addEventListener('load',iniciarPagina)
 
@@ -443,6 +510,7 @@ document.body.addEventListener("click", (e) => {
 
     
     if (e.target.textContent === 'Eliminar Seccion') {
-        alert('presionaste boton B')
+        eliminarSecciones()
+        
     }
 });
