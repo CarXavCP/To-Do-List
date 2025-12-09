@@ -1,6 +1,7 @@
 const seccionSidebar = document.getElementById('botones-proyectos')
 const botonAgregarProyecto = document.getElementById('nuevo-proyecto')
 const seccionTitulo = document.getElementById('titulo-proyecto')
+const tituloProyecto = document.getElementById('titulo')
 const pantallaSeccionesProyectos = document.getElementById('secciones-proyectos')
 const seccionBotonesAD = document.getElementById('seccionBtnA-D')
 const mensajeVacio = document.getElementById('aviso')
@@ -54,6 +55,9 @@ let identificadorSeccion
 let seccionesActuales
 //FUNCION EDITAR Y MOVER
 let tarjeta
+let contenedor
+let contNombreProyecto
+let botonEditado
 
 //CONTIENE LA SECCION SOBRE LA QUE SE TRABAJA AL EJECUTAR UN BOTON EN CASO DE SER NECESARIO
 let contenedorSeccion
@@ -126,7 +130,7 @@ async function agregarProyecto() {
     botonProyectoNuevo = document.createElement('button')
 
     botonProyectoNuevo.textContent = nombreProyecto
-    seccionTitulo.innerHTML = nombreProyecto
+    tituloProyecto.innerHTML = nombreProyecto
     botonProyectoNuevo.className = 'BProyectos'
     botonProyectoNuevo.id = 'btn-proyecto-' + contadorProyectos
     seccionSidebar.appendChild(botonProyectoNuevo)
@@ -202,10 +206,53 @@ function mostrarProyecto(botonAccionado) {
             })
             
             contenedorProyecto.style.display = 'flex'
-            seccionTitulo.innerHTML = nombreProyecto
+            tituloProyecto.innerHTML = nombreProyecto
     
         }
     }
+}
+
+async function editarNombreProyecto(boton) {
+    
+    contenedor = boton.closest('.encabezado')
+    contNombreProyecto = contenedor.querySelector('h2')
+
+    // const nuevoNombre = prompt('Editar nombre del proyecto:', contNombreProyecto.textContent);
+    // if (nuevoNombre !== null && nuevoNombre.trim() !== '') {
+    //     contNombreProyecto.textContent = nuevoNombre;
+    const { value: nuevoNombre } = await Swal.fire({
+        title: "Editar nombre del proyecto",
+        input: "text",
+        inputValue: nombreProyecto,
+        inputPlaceholder: "Nuevo nombre...",
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        cancelButtonText: "Cancelar",
+        inputValidator: (value) => {
+            if (!value.trim()) {
+                return "El nombre no puede estar vacío";
+            }
+        }
+    });
+
+    if (!nuevoNombre) return;
+    contNombreProyecto.textContent = nuevoNombre;
+
+
+    for (let i = 0; i < proyectos.length; i++) {
+        if (proyectos[i].nombre === nombreProyecto) {
+            proyectos[i].nombre = nuevoNombre
+            proyectos[i].id = nuevoNombre.replace(/\s+/g, '-') + [i]
+            
+            botonEditado = document.getElementById(botonesProyectos[i].id)
+            botonesProyectos[i].nombre = nuevoNombre
+            botonEditado.textContent = nuevoNombre
+        }
+    }
+
+    nombreProyecto = nuevoNombre
+    //}
+
 }
 
 async function agregarTarjeta(identificadorBoton) {
@@ -511,6 +558,13 @@ document.body.addEventListener("click", (e) => {
     
     if (e.target.textContent === 'Eliminar Seccion') {
         eliminarSecciones()
-        
+    }
+
+    if (e.target.id === 'editarProyecto') {
+        editarNombreProyecto(e.target)
+    }
+
+    if (e.target.id === 'eliminarProyecto'){
+        alert('presionaste boton B')
     }
 });
