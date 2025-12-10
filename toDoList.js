@@ -316,14 +316,26 @@ function eliminarTarjeta(boton) {
     tarjeta.remove()
 }
 
-function editarTarjeta(boton) {
+async function editarTarjeta(boton) {
     tarjeta = boton.closest('.tarjetas')
     textoTarjeta = tarjeta.querySelector('p')
 
-    const nuevoTexto = prompt('Edita el texto:', textoTarjeta.textContent);
-    if (nuevoTexto !== null && nuevoTexto.trim() !== '') {
-        textoTarjeta.textContent = nuevoTexto;
-    }
+    const { value: nuevoTexto } = await Swal.fire({
+        title: "Editar tarea",
+        input: "text",
+        inputValue: textoTarjeta.textContent,
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        cancelButtonText: "Cancelar",
+        inputValidator: (value) => {
+            if (!value.trim()) {
+                return "El nombre no puede estar vacío";
+            }
+        }
+    });
+
+    if (!nuevoTexto) return;
+    textoTarjeta.textContent = nuevoTexto;
 
 }
 
@@ -565,6 +577,6 @@ document.body.addEventListener("click", (e) => {
     }
 
     if (e.target.id === 'eliminarProyecto'){
-        alert('presionaste boton B')
+        alert('Este botón todavía no hace nada. Pero dará la opción de eliminar el proyecto actual')
     }
 });
