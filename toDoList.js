@@ -6,7 +6,6 @@ const pantallaSeccionesProyectos = document.getElementById('secciones-proyectos'
 const seccionBotonesAD = document.getElementById('seccionBtnA-D')
 const mensajeVacio = document.getElementById('aviso')
 
-
 const modal = document.getElementById("modal");
 const picker = document.getElementById("colorPicker");
 const confirmar = document.getElementById("confirmar");
@@ -100,6 +99,8 @@ function iniciarPagina() {
 
     botonAgregarProyecto.addEventListener('click', agregarProyecto)
 
+    mensajeVacio.innerHTML = 'Aún no se han agregado proyectos'
+
 }
 
 async function agregarProyecto() {
@@ -121,7 +122,6 @@ async function agregarProyecto() {
     nombreProyecto = nombre    
 
 
-    console.log(nombreProyecto)
     mensajeVacio.style.display = 'none'
     seccionTitulo.style.display = 'flex'
     seccionBotonesAD.style.display = 'flex'    
@@ -189,6 +189,7 @@ async function agregarProyecto() {
         
     seccionesActuales = seccionesIndependientes
     proyectoNuevo.style.display = 'flex'
+
         
 }
 
@@ -205,8 +206,11 @@ function mostrarProyecto(botonAccionado) {
                 div.style.display = 'none'
             })
             
+            seccionBotonesAD.style.display = 'flex'
             contenedorProyecto.style.display = 'flex'
             tituloProyecto.innerHTML = nombreProyecto
+            seccionTitulo.style.display = 'flex'
+            mensajeVacio.style.display = 'none'
     
         }
     }
@@ -217,9 +221,6 @@ async function editarNombreProyecto(boton) {
     contenedor = boton.closest('.encabezado')
     contNombreProyecto = contenedor.querySelector('h2')
 
-    // const nuevoNombre = prompt('Editar nombre del proyecto:', contNombreProyecto.textContent);
-    // if (nuevoNombre !== null && nuevoNombre.trim() !== '') {
-    //     contNombreProyecto.textContent = nuevoNombre;
     const { value: nuevoNombre } = await Swal.fire({
         title: "Editar nombre del proyecto",
         input: "text",
@@ -242,7 +243,6 @@ async function editarNombreProyecto(boton) {
     for (let i = 0; i < proyectos.length; i++) {
         if (proyectos[i].nombre === nombreProyecto) {
             proyectos[i].nombre = nuevoNombre
-            proyectos[i].id = nuevoNombre.replace(/\s+/g, '-') + [i]
             
             botonEditado = document.getElementById(botonesProyectos[i].id)
             botonesProyectos[i].nombre = nuevoNombre
@@ -251,8 +251,60 @@ async function editarNombreProyecto(boton) {
     }
 
     nombreProyecto = nuevoNombre
-    //}
 
+    console.log(proyectos,seccionesProyectos)
+}
+
+function eliminarProyecto() {
+    proyectos.forEach(proyecto => {
+        if (proyecto.nombre === nombreProyecto) {
+            let indDel = proyectos.indexOf(proyecto)
+
+            Swal.fire({
+                title: "¿Eliminar proyecto?",
+                html: `
+                    <b>${nombreProyecto}</b><br>
+                    Esta acción eliminará el proyecto con todas sus secciones y tareas.
+                `,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                reverseButtons: true
+            
+            }).then(result => {
+    
+                    if (!result.isConfirmed) return;  // ← ESTA ES LA CORRECCIÓN
+
+                    document.getElementById(botonesProyectos[indDel].id).remove()
+                   
+                    let contProyectoDOM = document.getElementById(proyectos[indDel].id);
+                    if (contProyectoDOM) contProyectoDOM.remove();
+                    // Opcional pero recomendado: ocultar el contenedor del título
+                    seccionTitulo.style.display = 'none';
+
+                    tituloProyecto.textContent = '';
+
+                    seccionBotonesAD.style.display = 'none'
+
+                    proyectos.splice(indDel, 1)
+                    seccionesProyectos.splice(indDel, 1)
+                    botonesProyectos.splice(indDel, 1)
+
+                                        
+                    if (proyectos.length > 0) {
+                        mensajeVacio.innerHTML = 'Escoge un proyecto'
+                    } else {
+                        mensajeVacio.innerHTML = 'Aún no se han agregado proyectos'
+                    }
+                    
+                    mensajeVacio.style.display = 'block';
+
+                });
+
+            
+        }
+    });
 }
 
 async function agregarTarjeta(identificadorBoton) {
@@ -313,7 +365,22 @@ async function agregarTarjeta(identificadorBoton) {
 
 function eliminarTarjeta(boton) {
     tarjeta = boton.closest('.tarjetas')
-    tarjeta.remove()
+    Swal.fire({
+        title: "¿Eliminar tarea?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true
+    
+    }).then(result => {
+
+            if (!result.isConfirmed) return;  // ← ESTA ES LA CORRECCIÓN
+
+                tarjeta.remove()
+    })
+    
+   
 }
 
 async function editarTarjeta(boton) {
@@ -351,7 +418,6 @@ function moverTarjeta(boton) {
         }
     })
     
-    console.log(seccion, idSeccionActual, opcionesSecciones)
 
     let opciones = {}
     opcionesSecciones.forEach( sec => {
@@ -376,9 +442,9 @@ function moverTarjeta(boton) {
         const idDestino = result.value
         const contenedorDestino = document.getElementById(idDestino)
 
-        if (!contenedorDestino) {
-            console.error('No se encontró el contenedor destino: ', idDestino)
-        }
+        // if (!contenedorDestino) {
+        //     console.error('No se encontró el contenedor destino: ', idDestino)
+        // }
 
         contenedorDestino.appendChild(tarjeta)
 
@@ -418,13 +484,10 @@ async function agregarSecciones() {
         }
     
     nuevaSeccion = nombreSeccion.replace(/ /g, "");  
-    console.log("El usuario escribió:", nuevaSeccion);
 
     for (let i = 0; i < proyectos.length; i++) {
         if (proyectos[i].nombre === nombreProyecto) {
-            console.log(proyectos[i].nombre, nombreProyecto)
             identificadorSeccion = nuevaSeccion + '-' + i
-            console.log(identificadorSeccion)
 
             contenedorSeccion = 
                 `
@@ -453,7 +516,6 @@ async function agregarSecciones() {
 
             contenedorReal.style.background = color;
             
-            console.log(seccionesActuales, seccionesProyectos)
         }
     }
         
@@ -487,8 +549,6 @@ async function eliminarSecciones() {
     const idSeleccionada = seleccion.value;
     const nombreSeleccionado = opciones[idSeleccionada];
 
-    console.log("Sección seleccionada:", idSeleccionada);
-
     const confirmacion = await Swal.fire({
         title: "¿Eliminar sección?",
         html: `
@@ -506,15 +566,11 @@ async function eliminarSecciones() {
 
     // Eliminar del DOM
     const seccionDOM = document.getElementById(idSeleccionada);
-    console.log("Elemento a eliminar:", seccionDOM);
-
-    console.log(idSeleccionada);
 
     for (let i = 0; i < seccionesActuales.length; i++) {
         if (seccionesActuales[i].contenedor.id === idSeleccionada) {
             seccionesActuales.splice(i, 1)
             if (seccionDOM) seccionDOM.remove();
-            console.log(seccionesActuales, seccionesProyectos)
         }
     }
 }
@@ -558,7 +614,6 @@ document.body.addEventListener("click", (e) => {
     if (e.target.className === "BProyectos") {
         botonAccionado = e.target.id
 
-        //console.log(e.target.id)
         mostrarProyecto(botonAccionado);
         return;
     }
@@ -577,6 +632,6 @@ document.body.addEventListener("click", (e) => {
     }
 
     if (e.target.id === 'eliminarProyecto'){
-        alert('Este botón todavía no hace nada. Pero dará la opción de eliminar el proyecto actual')
+        eliminarProyecto()
     }
 });
